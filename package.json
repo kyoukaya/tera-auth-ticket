@@ -1,0 +1,11 @@
+{
+  "name": "tera-auth-ticket-na",
+  "version": "1.0.0",
+  "description": "Simulates logging onto a Playwith SEA account to retrieve an auth ticket.",
+  "dependencies": {
+    "axios": "^0.19.0"
+  },
+  "main": "index.js",
+  "author": "kyoukaya",
+  "license": "ISC"
+}
