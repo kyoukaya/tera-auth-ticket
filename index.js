@@ -22,9 +22,8 @@ class WebClient {
   }
 
   async getLogin(callback) {
-    let response, cookie
-
-    response = await this.http.post('oauth/token',
+    // Get OAuth token
+    let response = await this.http.post('oauth/token',
       {
         'client_id': this.clientID,
         'client_secret': this.clientSecret,
@@ -34,45 +33,21 @@ class WebClient {
         'username': this.email
       }
     )
-
-    console.error(response.data)
     if (response.status !== 200) {
-      console.error(response.data)
-      console.error('Login failed.')
+      console.error('Login failed.\n' + response.data)
       return callback(new Error('Login failed.'))
     }
     let oAuthToken = response.data['access_token']
-    console.log(`Token: ${oAuthToken}`)
-    // Simulate an actual log in by requesting the server list
-    // For some reason, this is necessary for the server to issue a cookie that will
-    // generate a valid token for logging in with a fake client.
-    // response = await this.http.post('API/Account/ServerList', null, {
-    //   headers: {
-    //     cookie: cookie
-    //   }
-    // })
 
-    // cookie = response.headers['set-cookie'][0].split(';')[0]
-
-    // Get the ticket
-
-    response = await this.http.get('api/public/launcher_v3/tera_support/request_auth_token/' + this.userID,
-      {
-        headers: {
-          'Authorization': 'Bearer ' + oAuthToken
-        }
-      }
-    ).catch((reason) => {
-      console.error(reason)
-    })
-
-    console.error(response.data)
+    // Get TERA auth token
+    let url = 'api/public/launcher_v3/tera_support/request_auth_token/' + this.userID
+    response = await this.http.get(url, { headers: { 'Authorization': 'Bearer ' + oAuthToken } })
     if (response.status !== 200 || !response.data.success) {
-      console.error(`Invalid ticket: ${response}`)
+      console.error('Invalid ticket\n' + response)
       return callback(new Error('Invalid ticket.'))
     }
 
-    console.log(`[web] got ticket (${response.data.token})`)
+    console.log(`[web] got ticket (${response.data.auth_token})`)
 
     callback(null, {
       ticket: response.data.auth_token
