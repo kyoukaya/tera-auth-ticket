@@ -1,5 +1,5 @@
 {
-  "name": "tera-auth-ticket-na",
+  "name": "tera-auth-ticket",
   "version": "1.0.0",
   "description": "Simulates logging onto a Playwith SEA account to retrieve an auth ticket.",
   "dependencies": {
